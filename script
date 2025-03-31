@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      2.7
 // @description  Xóa bài quảng cáo trên Facebook News Feed
-// @author       Bạn
+// @author       dxchien
 // @match        *://www.facebook.com/*
 // @grant        none
 // ==/UserScript==
