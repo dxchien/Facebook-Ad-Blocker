@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         Facebook Ad Blocker
 // @namespace    http://tampermonkey.net/
-// @version      2.9
+// @version      2.10
 // @description  Xóa bài quảng cáo trên Facebook News Feed
 // @author       dxchien
 // @match        *://www.facebook.com/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=facebook.com
 // @updateURL    https://raw.githubusercontent.com/dxchien/Facebook-Ad-Blocker/main/script.js
 // @downloadURL  https://raw.githubusercontent.com/dxchien/Facebook-Ad-Blocker/main/script.js
 // @grant        none
