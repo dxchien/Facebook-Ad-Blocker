@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Facebook Ad Blocker
 // @namespace    http://tampermonkey.net/
-// @version      2.12
+// @version      2.13
 // @description  Xóa bài quảng cáo trên Facebook News Feed
 // @author       dxchien
 // @match        *://www.facebook.com/*
@@ -17,6 +17,7 @@
 
     function removeSponsoredPosts() {
         let adsFound = false;
+        const sponsoredText = "Được tài trợ".split('').filter(char => char.trim() !== '').map(char => `>${char}<`).join(' ');
 
         // find ad id
         var adDetect = [];
@@ -35,7 +36,7 @@
             if (link.href.includes("?__cft__[0]=")) {
                 const linkHTML = link.innerHTML;
                 adDetect.forEach(item => {
-                    if (linkHTML.includes(item)) {
+                    if (linkHTML.includes(item) || sponsoredText.split(' ').every(segment => linkHTML.includes(segment))) {
                         console.log("Found ad => " + item);
 
                         let parent = link;
@@ -47,7 +48,7 @@
                             }
                         }
                         if (parent) {
-                            showNotification("Removing sponsored post");
+                            // showNotification("Removing sponsored post");
                             console.log("Removing sponsored post");
                             parent.remove();
                             adsFound = true;
