@@ -6,8 +6,8 @@
 // @author       dxchien
 // @match        *://www.facebook.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=facebook.com
-// @updateURL    https://raw.githubusercontent.com/dxchien/Facebook-Ad-Blocker/main/script.js
-// @downloadURL  https://raw.githubusercontent.com/dxchien/Facebook-Ad-Blocker/main/script.js
+// @updateURL    https://raw.githubusercontent.com/dxchien/Facebook-Ad-Blocker/refs/heads/main/script.js
+// @downloadURL  https://raw.githubusercontent.com/dxchien/Facebook-Ad-Blocker/refs/heads/main/script.js
 // @grant        none
 // ==/UserScript==
 
