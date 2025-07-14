@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Facebook Ad Blocker
 // @namespace    http://tampermonkey.net/
-// @version      2.10
+// @version      2.11
 // @description  Xóa bài quảng cáo trên Facebook News Feed
 // @author       dxchien
 // @match        *://www.facebook.com/*
@@ -41,6 +41,7 @@
                         }
                     }
                     if (parent) {
+                        showNotification("Removing sponsored post");
                         console.log("Removing sponsored post");
                         parent.remove();
                         adsFound = true;
@@ -49,6 +50,28 @@
             }
         });
     }
+
+    // Function to show notification
+    function showNotification(text) {
+        // Check if the browser supports notifications
+        if (!("Notification" in window)) {
+            alert("This browser does not support desktop notifications.");
+        }
+        // Check if notification permissions have already been granted
+        else if (Notification.permission === "granted") {
+            // If it's okay let's create a notification
+            var notification = new Notification(text);
+        }
+        // Otherwise, we need to ask the user for permission
+        else if (Notification.permission !== "denied") {
+            Notification.requestPermission().then(function (permission) {
+                // If the user accepts, let's create a notification
+                if (permission === "granted") {
+                    var notification = new Notification(text);
+                }
+            });
+        }
+    }    
 
     setInterval(removeSponsoredPosts, 1000);
 })();
