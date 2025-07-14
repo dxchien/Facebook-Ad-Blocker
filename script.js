@@ -1,35 +1,36 @@
 // ==UserScript==
 // @name         Facebook Ad Blocker
 // @namespace    http://tampermonkey.net/
-// @version      2.8
+// @version      2.9
 // @description  Xóa bài quảng cáo trên Facebook News Feed
 // @author       dxchien
 // @match        *://www.facebook.com/*
-// @updateURL    https://raw.githubusercontent.com/dxchien/Facebook-Ad-Blocker/refs/heads/main/script.js
-// @downloadURL  https://raw.githubusercontent.com/dxchien/Facebook-Ad-Blocker/refs/heads/main/script.js
+// @updateURL    https://raw.githubusercontent.com/dxchien/Facebook-Ad-Blocker/main/script.js
+// @downloadURL  https://raw.githubusercontent.com/dxchien/Facebook-Ad-Blocker/main/script.js
 // @grant        none
 // ==/UserScript==
 
 (function() {
     'use strict';
+    console.log("Start");
 
     function removeSponsoredPosts() {
         let adsFound = false;
-        const sponsoredText = "Được tài trợ".split('').filter(char => char.trim() !== '').map(char => `>${char}<`).join(' ');
 
         // find svg id
-        var svgId;
-        const elements = document.querySelectorAll('text[id^="Svg"]');
+        var adDetect;
+        const elements = document.querySelectorAll('div[class^="__fb-light-mode"] span');
+
         elements.forEach(el => {
             if(el.textContent.trim() == "Được tài trợ") {
-                svgId = "#" + el.id.trim();
+                adDetect = 'aria-labelledby="' + el.id.trim() + '"';
             }
         });
 
         document.querySelectorAll('a[href]').forEach(link => {
             if (link.href.includes("?__cft__[0]=")) {
                 const linkHTML = link.innerHTML;
-                if (linkHTML.includes(svgId) || sponsoredText.split(' ').every(segment => linkHTML.includes(segment))) {
+                if (linkHTML.includes(adDetect)) {
                     let parent = link;
                     for (let i = 0; i < 12; i++) {
                         if (parent.parentElement) {
