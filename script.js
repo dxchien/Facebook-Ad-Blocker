@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Facebook Ad Blocker
 // @namespace    http://tampermonkey.net/
-// @version      2.11
+// @version      2.12
 // @description  Xóa bài quảng cáo trên Facebook News Feed
 // @author       dxchien
 // @match        *://www.facebook.com/*
@@ -18,37 +18,45 @@
     function removeSponsoredPosts() {
         let adsFound = false;
 
-        // find svg id
-        var adDetect;
+        // find ad id
+        var adDetect = [];
         const elements = document.querySelectorAll('div[class^="__fb-light-mode"] span');
+        let arr = Array.from(elements).reverse();
 
-        elements.forEach(el => {
+        arr.forEach(el => {
             if(el.textContent.trim() == "Được tài trợ") {
-                adDetect = 'aria-labelledby="' + el.id.trim() + '"';
+                adDetect.push('aria-labelledby="' + el.id.trim() + '"');
             }
         });
+        // console.log("adDetect arr => " + adDetect);
 
+        // console.log("=== start check ===")
         document.querySelectorAll('a[href]').forEach(link => {
             if (link.href.includes("?__cft__[0]=")) {
                 const linkHTML = link.innerHTML;
-                if (linkHTML.includes(adDetect)) {
-                    let parent = link;
-                    for (let i = 0; i < 12; i++) {
-                        if (parent.parentElement) {
-                            parent = parent.parentElement;
-                        } else {
-                            break;
+                adDetect.forEach(item => {
+                    if (linkHTML.includes(item)) {
+                        console.log("Found ad => " + item);
+
+                        let parent = link;
+                        for (let i = 0; i < 12; i++) {
+                            if (parent.parentElement) {
+                                parent = parent.parentElement;
+                            } else {
+                                break;
+                            }
+                        }
+                        if (parent) {
+                            showNotification("Removing sponsored post");
+                            console.log("Removing sponsored post");
+                            parent.remove();
+                            adsFound = true;
                         }
                     }
-                    if (parent) {
-                        showNotification("Removing sponsored post");
-                        console.log("Removing sponsored post");
-                        parent.remove();
-                        adsFound = true;
-                    }
-                }
+                });
             }
         });
+        // console.log("=== end check ===")
     }
 
     // Function to show notification
@@ -73,5 +81,5 @@
         }
     }    
 
-    setInterval(removeSponsoredPosts, 1000);
+    setInterval(removeSponsoredPosts, 200);
 })();
