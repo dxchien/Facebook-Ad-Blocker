@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Facebook Ad Blocker
 // @namespace    http://tampermonkey.net/
-// @version      2.13
+// @version      2.14
 // @description  Xóa bài quảng cáo trên Facebook News Feed
 // @author       dxchien
 // @match        *://www.facebook.com/*
@@ -16,7 +16,6 @@
     console.log("Start");
 
     function removeSponsoredPosts() {
-        let adsFound = false;
         const sponsoredText = "Được tài trợ".split('').filter(char => char.trim() !== '').map(char => `>${char}<`).join(' ');
 
         // find ad id
@@ -34,30 +33,36 @@
         // console.log("=== start check ===")
         document.querySelectorAll('a[href]').forEach(link => {
             if (link.href.includes("?__cft__[0]=")) {
+                if(link.textContent.trim().includes("Được tài trợ")) {
+                    removePost(link);
+                }
+
                 const linkHTML = link.innerHTML;
                 adDetect.forEach(item => {
                     if (linkHTML.includes(item) || sponsoredText.split(' ').every(segment => linkHTML.includes(segment))) {
                         console.log("Found ad => " + item);
-
-                        let parent = link;
-                        for (let i = 0; i < 12; i++) {
-                            if (parent.parentElement) {
-                                parent = parent.parentElement;
-                            } else {
-                                break;
-                            }
-                        }
-                        if (parent) {
-                            // showNotification("Removing sponsored post");
-                            console.log("Removing sponsored post");
-                            parent.remove();
-                            adsFound = true;
-                        }
+                        removePost(link);
                     }
                 });
             }
         });
         // console.log("=== end check ===")
+    }
+
+    function removePost(child) {
+        let parent = child;
+        for (let i = 0; i < 12; i++) {
+            if (parent.parentElement) {
+                parent = parent.parentElement;
+            } else {
+                break;
+            }
+        }
+        if (parent) {
+            // showNotification("Removing sponsored post");
+            console.log("Removing sponsored post");
+            parent.remove();
+        }
     }
 
     // Function to show notification
